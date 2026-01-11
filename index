@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEOUL</title>
+
+  <!-- CSS: 로컬 파일로 열 때는 ./가 더 안전 -->
+  <link rel="stylesheet" href="./static/css/서울.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="logo"><a href="/">LOGO</a></h1>
+
+      <nav class="main-nav" aria-label="메인 메뉴">
+        <ul>
+          <li><a href="#">맛집</a></li>
+          <li><a href="#">관광지</a></li>
+          <li><a href="#">이벤트</a></li>
+          <li><a href="#">전시</a></li>
+        </ul>
+      </nav>
+
+      <div class="user-nav" aria-label="회원 메뉴">
+        <a href="#" class="login">로그인</a>
+        <a href="#" class="signup">회원가입</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="메인 배너">
+    <div class="hero-media" id="heroMedia">
+      <div class="hero-content">
+        <h2>특별한 순간을 완성하는</h2>
+        <p>Curated Experience</p>
+      </div>
+
+      <div class="hero-dots" id="heroDots" aria-label="배너 선택"></div>
+    </div>
+  </section>
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <!-- content will be added later -->
+  </div>
+</footer>
+
+<script>
+  /* ===== Hero Slider ===== */
+  const slides = [
+    "./static/img/hero1.jpg",
+    "./static/img/hero2.jpg",
+    "./static/img/hero3.jpg",
+  ];
+
+  const heroMedia = document.getElementById("heroMedia");
+  const dotsWrap = document.getElementById("heroDots");
+
+  let current = 0;
+  let timer = null;
+  const intervalMs = 4000;
+
+  function setActiveDot() {
+    dotsWrap.querySelectorAll(".hero-dot")
+      .forEach((d, i) => d.classList.toggle("is-active", i === current));
+  }
+
+  function renderSlide() {
+    heroMedia.style.backgroundImage = `url('${slides[current]}')`;
+    setActiveDot();
+  }
+
+  function next() {
+    current = (current + 1) % slides.length;
+    renderSlide();
+  }
+
+  function startAuto() {
+    stopAuto();
+    timer = setInterval(next, intervalMs);
+  }
+
+  function stopAuto() {
+    if (timer) clearInterval(timer);
+  }
+
+  function buildDots() {
+    dotsWrap.innerHTML = "";
+    slides.forEach((_, i) => {
+      const btn = document.createElement("button");
+      btn.className = "hero-dot";
+      btn.addEventListener("click", () => {
+        current = i;
+        renderSlide();
+        startAuto();
+      });
+      dotsWrap.appendChild(btn);
+    });
+  }
+
+  heroMedia.addEventListener("mouseenter", stopAuto);
+  heroMedia.addEventListener("mouseleave", startAuto);
+
+  buildDots();
+  renderSlide();
+  startAuto();
+
+  /* ===== Header Scroll ===== */
+  const header = document.querySelector(".site-header");
+
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("is-scrolled", window.scrollY > 40);
+  });
+</script>
+</body>
+</html>
